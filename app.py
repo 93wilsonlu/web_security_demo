@@ -49,8 +49,20 @@ def change_session():
     return render_template('cookie.html')
 
 
+@app.route('/command_injection', methods=['GET'])
+def command_injection():
+    if not request.args.get('ip'):
+        return render_template('command_injection.html')
+    ip = request.args['ip']
+    with os.popen('ping -c 3 '+ip, 'r') as f:
+        content = f.read()
+    return content
+
+
 @app.route('/ssrf', methods=['GET'])
 def ssrf():
+    if not request.args.get('url'):
+        return render_template('ssrf.html')
     url = request.args['url']
     with urlopen(url) as resp:
         content = resp.read().decode()
