@@ -1,6 +1,7 @@
 from flask import Flask, render_template, make_response, redirect, request, session
 import os
 from datetime import timedelta
+from urllib.request import urlopen
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(24)
@@ -9,6 +10,17 @@ app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=31)
 @app.route('/', methods=['GET'])
 def index():
     return render_template('index.html')
+
+
+@app.route('/get_form', methods=['GET'])
+def get_form():
+    return render_template('get_form.html', username=request.args.get('username'))
+
+
+@app.route('/post_form', methods=['GET', 'POST'])
+def post_form():
+    return render_template('post_form.html', username=request.form.get('username'))
+
 
 @app.route('/302', methods=['GET'])
 def halt_redirect():
@@ -35,3 +47,11 @@ def change_session():
     if session['username_sess'] == 'admin':
         return 'SCAIST{1_c4n_ch4n63_535510n!}'
     return render_template('cookie.html')
+
+
+@app.route('/ssrf', methods=['GET'])
+def ssrf():
+    url = request.args['url']
+    with urlopen(url) as resp:
+        content = resp.read().decode()
+    return content
