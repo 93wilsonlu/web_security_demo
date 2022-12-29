@@ -35,7 +35,7 @@ def halt_redirect():
 
 @app.route('/cookie', methods=['GET'])
 def change_cookie():
-    if not request.cookies.get('username'):
+    if request.cookies.get('username') is None:
         response = make_response(render_template('cookie.html'))
         response.set_cookie('username', 'guest')
         return response
@@ -46,7 +46,7 @@ def change_cookie():
 
 @app.route('/session', methods=['GET'])
 def change_session():
-    if not session.get('username_sess'):
+    if session.get('username_sess') is None:
         session['username_sess'] = 'guest'
         session.permanent = True
     if session['username_sess'] == 'admin':
@@ -63,9 +63,25 @@ def logic_flaw():
     return render_template(site)
 
 
+
+@app.route('/logic_flaw_number', methods=['GET', 'POST'])
+def logic_flaw_number():
+    if session.get('amount') is None:
+        session['amount'] = 10
+    
+    if request.form.get('count') is not None:
+        try:
+            count = int(request.form['count'])
+            if session['amount'] >= count * 10:
+                session['amount'] -= count * 10
+        except:
+            pass
+    return render_template('logic_flaw_number.html', amount=session['amount'])
+
+
 @app.route('/command_injection', methods=['GET'])
 def command_injection():
-    if not request.args.get('ip'):
+    if request.args.get('ip') is None:
         return render_template('command_injection.html')
     ip = request.args['ip']
     with os.popen('ping -c 3 ' + ip, 'r') as f:
@@ -75,7 +91,7 @@ def command_injection():
 
 @app.route('/ssrf', methods=['GET'])
 def ssrf():
-    if not request.args.get('url'):
+    if request.args.get('url') is None:
         return render_template('ssrf.html')
     url = request.args['url']
     with urlopen(url) as resp:
