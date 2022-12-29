@@ -1,0 +1,23 @@
+<html>
+    <head></head>
+    <body>
+        {% if isAdmin %}
+        SCAIST{wh3n_60d_cl0535_4_d00r.h3_mu57_0p3n_4n07h3r_w1nd0w.}
+        {% else %}
+        <h1>Only admin can read the flag.</h1>
+        <p>(endwith @admin.com)</p>
+        {% endif %}
+
+        <form method="post">
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" />
+            <input type="submit" value="Login" />
+        </form>
+        {% if email != '' %}
+        <p>
+            {{ email }}
+        </p>
+        <a href="{{ url_for('logic_flaw_lab.setting') }}">Setting</a>
+        {% endif %}
+    </body>
+</html>

@@ -7,6 +7,9 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(24)
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=31)
 
+from logic_flaw_lab import logic_flaw_lab
+app.register_blueprint(logic_flaw_lab, url_prefix='/logic_flaw_lab')
+
 @app.route('/', methods=['GET'])
 def index():
     return render_template('index.html')
@@ -29,6 +32,7 @@ def halt_redirect():
     response.headers['Flag'] = 'SCAIST{Red1r3Ct_is_cO0l!}'
     return response
 
+
 @app.route('/cookie', methods=['GET'])
 def change_cookie():
     if not request.cookies.get('username'):
@@ -38,6 +42,7 @@ def change_cookie():
     elif request.cookies['username'] == 'admin':
         return 'SCAIST{1_c4n_ch4n63_c00k135!}'
     return render_template('cookie.html')
+
 
 @app.route('/session', methods=['GET'])
 def change_session():
@@ -49,12 +54,21 @@ def change_session():
     return render_template('cookie.html')
 
 
+@app.route('/logic_flaw', methods=['GET'])
+def logic_flaw():
+    site = 'index.html'
+    if session.get('username_sess') == 'admin':
+        print('Admin in!')
+    site = 'logic_flaw_flag.html'
+    return render_template(site)
+
+
 @app.route('/command_injection', methods=['GET'])
 def command_injection():
     if not request.args.get('ip'):
         return render_template('command_injection.html')
     ip = request.args['ip']
-    with os.popen('ping -c 3 '+ip, 'r') as f:
+    with os.popen('ping -c 3 ' + ip, 'r') as f:
         content = f.read()
     return content
 
