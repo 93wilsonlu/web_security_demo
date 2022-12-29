@@ -1,4 +1,4 @@
-from flask import Flask, render_template, make_response, redirect, request, session
+from flask import Flask, render_template, make_response, redirect, request, session, send_file
 import os
 from datetime import timedelta
 from urllib.request import urlopen
@@ -77,6 +77,14 @@ def logic_flaw_number():
         except:
             pass
     return render_template('logic_flaw_number.html', amount=session['amount'])
+
+
+@app.route('/path_traversal', methods=['GET'])
+def path_traversal():
+    if request.args.get('filename') is not None:
+        return send_file('./'+request.args.get('filename'))
+    return render_template('path_traversal.html')
+
 
 
 @app.route('/command_injection', methods=['GET'])
