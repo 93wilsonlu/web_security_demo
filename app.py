@@ -1,4 +1,4 @@
-from flask import Flask, render_template, make_response, redirect, request, session, send_file
+from flask import Flask, render_template, make_response, redirect, request, session, send_file, url_for
 import os
 from datetime import timedelta
 from urllib.request import urlopen
@@ -9,6 +9,7 @@ app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=31)
 
 from logic_flaw_lab import logic_flaw_lab
 app.register_blueprint(logic_flaw_lab, url_prefix='/logic_flaw_lab')
+
 
 @app.route('/', methods=['GET'])
 def index():
@@ -40,7 +41,7 @@ def change_cookie():
         response.set_cookie('username', 'guest')
         return response
     elif request.cookies['username'] == 'admin':
-        return 'SCAIST{1_c4n_ch4n63_c00k135!}'
+        return 'SCAIST{1_c4n_ch4n93_c00k135!}'
     return render_template('cookie.html')
 
 
@@ -50,7 +51,7 @@ def change_session():
         session['username_sess'] = 'guest'
         session.permanent = True
     if session['username_sess'] == 'admin':
-        return 'SCAIST{1_c4n_ch4n63_535510n!}'
+        return 'SCAIST{1_c4n_ch4n93_535510n!}'
     return render_template('cookie.html')
 
 
@@ -63,12 +64,11 @@ def logic_flaw():
     return render_template(site)
 
 
-
 @app.route('/logic_flaw_number', methods=['GET', 'POST'])
 def logic_flaw_number():
     if session.get('amount') is None:
         session['amount'] = 10
-    
+
     if request.form.get('count') is not None:
         try:
             count = int(request.form['count'])
@@ -79,12 +79,19 @@ def logic_flaw_number():
     return render_template('logic_flaw_number.html', amount=session['amount'])
 
 
+@app.route('/broken_access_control_role', methods=['GET', 'POST'])
+def broken_access_control_role():
+    if request.args.get('role') is None:
+        return redirect(url_for('broken_access_control_role', role=1))
+
+    return render_template('broken_access_control_role.html', role=request.args['role'])
+
+
 @app.route('/path_traversal', methods=['GET'])
 def path_traversal():
     if request.args.get('filename') is not None:
-        return send_file('./'+request.args.get('filename'))
+        return send_file('./images/' + request.args.get('filename'))
     return render_template('path_traversal.html')
-
 
 
 @app.route('/command_injection', methods=['GET'])
