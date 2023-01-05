@@ -16,6 +16,11 @@ def index():
     return render_template('index.html')
 
 
+@app.route('/free_flag', methods=['GET'])
+def free_flag():
+    return 'SCAIST{3d174bl3_fr0n73nd}'
+
+
 @app.route('/get_form', methods=['GET'])
 def get_form():
     return render_template('get_form.html', username=request.args.get('username'))
@@ -79,12 +84,12 @@ def logic_flaw_number():
     return render_template('logic_flaw_number.html', amount=session['amount'])
 
 
-@app.route('/broken_access_control_role', methods=['GET', 'POST'])
-def broken_access_control_role():
+@app.route('/broken_role', methods=['GET', 'POST'])
+def broken_role():
     if request.args.get('role') is None:
-        return redirect(url_for('broken_access_control_role', role=1))
+        return redirect(url_for('broken_role', role=1))
 
-    return render_template('broken_access_control_role.html', role=request.args['role'])
+    return render_template('broken_role.html', role=request.args['role'])
 
 
 @app.route('/path_traversal', methods=['GET'])
