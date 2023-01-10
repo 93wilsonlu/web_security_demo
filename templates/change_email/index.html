@@ -2,10 +2,10 @@
     <head></head>
     <body>
         {% if isAdmin %}
-        SCAIST{wh3n_90d_cl0535_4_d00r.h3_mu57_0p3n_4n07h3r_w1nd0w.}
+        SCAIST{wh3n_g0d_cl0ses_4_d00r_h3_mu5t_0p3n_4n0th3r_w1nd0w}
         {% else %}
-        <h1>Only admin can read the flag.</h1>
-        <p>(endwith @admin.com)</p>
+        <h1>Only admin (endswith @admin.scaist.com) can read the flag.</h1>
+        <p>You cannot login as an admin. Ha! Ha!</p>
         {% endif %}
 
         <form method="post">
@@ -17,7 +17,7 @@
         <p>
             {{ email }}
         </p>
-        <a href="{{ url_for('logic_flaw_lab.setting') }}">Setting</a>
+        <a href="{{ url_for('change_email.setting') }}">Setting</a>
         {% endif %}
     </body>
 </html>

@@ -1,14 +1,14 @@
-from flask import Flask, render_template, make_response, redirect, request, session, send_file, url_for
+from flask import Flask, render_template, make_response, redirect, request, session, send_file, url_for, abort
 import os
 from datetime import timedelta
 from urllib.request import urlopen
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.urandom(24)
+app.config['SECRET_KEY'] = os.urandom(32)
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=31)
 
-from logic_flaw_lab import logic_flaw_lab
-app.register_blueprint(logic_flaw_lab, url_prefix='/logic_flaw_lab')
+from change_email import change_email
+app.register_blueprint(change_email, url_prefix='/change_email')
 
 
 @app.route('/', methods=['GET'])
@@ -18,7 +18,7 @@ def index():
 
 @app.route('/free_flag', methods=['GET'])
 def free_flag():
-    return 'SCAIST{3d174bl3_fr0n73nd}'
+    return 'SCAIST{Ed1t4ble_fr0nt3nd}'
 
 
 @app.route('/get_form', methods=['GET'])
@@ -41,29 +41,29 @@ def halt_redirect():
 
 @app.route('/cookie', methods=['GET'])
 def change_cookie():
-    if request.cookies.get('username') is None:
+    if 'username' not in request.cookies:
         response = make_response(render_template('cookie.html'))
         response.set_cookie('username', 'guest')
         return response
     elif request.cookies['username'] == 'admin':
-        return 'SCAIST{1_c4n_ch4n93_c00k135!}'
+        return 'SCAIST{1_c4n_ch4ng3_c00ki3s!}'
     return render_template('cookie.html')
 
 
 @app.route('/session', methods=['GET'])
 def change_session():
-    if session.get('username_sess') is None:
+    if 'username_sess' not in session:
         session['username_sess'] = 'guest'
         session.permanent = True
     if session['username_sess'] == 'admin':
-        return 'SCAIST{1_c4n_ch4n93_535510n!}'
+        return 'SCAIST{1_c4n_ch4ng3_s3ss10n!}'
     return render_template('cookie.html')
 
 
 @app.route('/logic_flaw', methods=['GET'])
 def logic_flaw():
     site = 'index.html'
-    if session.get('username_sess') == 'admin':
+    if session.get('username_sess', '') == 'admin':
         print('Admin in!')
     site = 'logic_flaw_flag.html'
     return render_template(site)
@@ -71,10 +71,10 @@ def logic_flaw():
 
 @app.route('/logic_flaw_number', methods=['GET', 'POST'])
 def logic_flaw_number():
-    if session.get('amount') is None:
+    if 'amount' not in session:
         session['amount'] = 10
 
-    if request.form.get('count') is not None:
+    if 'count' in request.form:
         try:
             count = int(request.form['count'])
             if session['amount'] >= count * 10:
@@ -86,7 +86,7 @@ def logic_flaw_number():
 
 @app.route('/broken_role', methods=['GET', 'POST'])
 def broken_role():
-    if request.args.get('role') is None:
+    if 'role' not in request.args:
         return redirect(url_for('broken_role', role=1))
 
     return render_template('broken_role.html', role=request.args['role'])
@@ -94,14 +94,14 @@ def broken_role():
 
 @app.route('/path_traversal', methods=['GET'])
 def path_traversal():
-    if request.args.get('filename') is not None:
-        return send_file('./images/' + request.args.get('filename'))
+    if 'filename' in request.args:
+        return send_file('images/' + request.args['filename'])
     return render_template('path_traversal.html')
 
 
 @app.route('/command_injection', methods=['GET'])
 def command_injection():
-    if request.args.get('ip') is None:
+    if 'ip' not in request.args:
         return render_template('command_injection.html')
     ip = request.args['ip']
     with os.popen('ping -c 3 ' + ip, 'r') as f:
@@ -111,7 +111,7 @@ def command_injection():
 
 @app.route('/ssrf', methods=['GET'])
 def ssrf():
-    if request.args.get('url') is None:
+    if 'url' not in request.args:
         return render_template('ssrf.html')
     url = request.args['url']
     with urlopen(url) as resp:
