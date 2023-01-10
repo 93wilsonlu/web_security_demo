@@ -99,12 +99,28 @@ def path_traversal():
     return render_template('path_traversal.html')
 
 
-@app.route('/command_injection', methods=['GET'])
-def command_injection():
+@app.route('/cmdi', methods=['GET'])
+def cmdi():
     if 'ip' not in request.args:
-        return render_template('command_injection.html')
+        return render_template('cmdi.html')
     ip = request.args['ip']
-    with os.popen('ping -c 3 ' + ip, 'r') as f:
+    with os.popen('ping -c 1 ' + ip, 'r') as f:
+        content = f.read()
+    return content
+
+
+@app.route('/cmdi_pro_max', methods=['GET'])
+def cmdi_pro_max():
+    if 'ip' not in request.args:
+        return render_template('cmdi_pro_max.html')
+    ip = request.args['ip']
+    if 'flag.txt' in ip:
+        return 'Bad hacker! You can never read flag.txt'
+    if 'cat' in ip:
+        return 'Don\'t touch my cat!'
+    ip.replace(';', '')
+    ip.replace(' ', '')
+    with os.popen('ping -c 1 ' + ip, 'r') as f:
         content = f.read()
     return content
 
