@@ -5,7 +5,7 @@ name = "pypi"
 
 [packages]
 flask = "*"
-requests = "*"
+bootstrap-flask = "*"
 
 [dev-packages]
 autopep8 = "*"

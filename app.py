@@ -2,10 +2,12 @@ from flask import Flask, render_template, make_response, redirect, request, sess
 import os
 from datetime import timedelta
 from urllib.request import urlopen
+from flask_bootstrap import Bootstrap5
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(32)
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=31)
+bootstrap = Bootstrap5(app)
 
 from change_email import change_email
 app.register_blueprint(change_email, url_prefix='/change_email')

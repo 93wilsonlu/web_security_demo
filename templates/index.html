@@ -1,25 +1,90 @@
 <html>
-    <head></head>
+    <head>
+        {{ bootstrap.load_css() }}
+    </head>
     <body>
-        <h1>Welcome to SCAIST!</h1>
-        <ul>
-            <li>
-                <a href="/free_flag" style="pointer-events: none">/free_flag</a>
-            </li>
-            <li><a href="/get_form">/get_form</a></li>
-            <li><a href="/post_form">/post_form</a></li>
-            <li><a href="/302">/302</a></li>
-            <li><a href="/cookie">/cookie</a></li>
-            <li><a href="/session">/session</a></li>
-            <li><a href="/logic_flaw">/logic_flaw</a></li>
-            <li><a href="/logic_flaw_number">/logic_flaw_number</a></li>
-            <li><a href="/change_email">/change_email</a></li>
-            <li><a href="/broken_role">/broken_role</a></li>
-            <li><a href="/path_traversal">/path_traversal</a></li>
-            <li><a href="/cmdi">/cmdi</a></li>
-            <li><a href="/cmdi_pro_max">/cmdi_pro_max</a></li>
-            <li><a href="/ssrf">/ssrf</a></li>
-            <li><a href="/ssrf_target">/ssrf_target</a></li>
-        </ul>
+        <div class="container pt-3">
+            <div class="card">
+                <div class="card-header fs-2">Welcome to SCAIST!</div>
+                <ul class="list-group list-group-flush">
+                    <a
+                        class="list-group-item list-group-item-action disabled"
+                        href="/free_flag"
+                        >/free_flag</a
+                    >
+                    <a
+                        class="list-group-item list-group-item-action"
+                        href="/get_form"
+                        >/get_form</a
+                    >
+                    <a
+                        class="list-group-item list-group-item-action"
+                        href="/post_form"
+                        >/post_form</a
+                    >
+                    <a
+                        class="list-group-item list-group-item-action"
+                        href="/302"
+                        >/302</a
+                    >
+                    <a
+                        class="list-group-item list-group-item-action"
+                        href="/cookie"
+                        >/cookie</a
+                    >
+                    <a
+                        class="list-group-item list-group-item-action"
+                        href="/session"
+                        >/session</a
+                    >
+                    <a
+                        class="list-group-item list-group-item-action"
+                        href="/logic_flaw"
+                        >/logic_flaw</a
+                    >
+                    <a
+                        class="list-group-item list-group-item-action"
+                        href="/logic_flaw_number"
+                        >/logic_flaw_number</a
+                    >
+                    <a
+                        class="list-group-item list-group-item-action"
+                        href="/change_email"
+                        >/change_email</a
+                    >
+                    <a
+                        class="list-group-item list-group-item-action"
+                        href="/broken_role"
+                        >/broken_role</a
+                    >
+                    <a
+                        class="list-group-item list-group-item-action"
+                        href="/path_traversal"
+                        >/path_traversal</a
+                    >
+                    <a
+                        class="list-group-item list-group-item-action"
+                        href="/cmdi"
+                        >/cmdi</a
+                    >
+                    <a
+                        class="list-group-item list-group-item-action"
+                        href="/cmdi_pro_max"
+                        >/cmdi_pro_max</a
+                    >
+                    <a
+                        class="list-group-item list-group-item-action"
+                        href="/ssrf"
+                        >/ssrf</a
+                    >
+                    <a
+                        class="list-group-item list-group-item-action"
+                        href="/ssrf_target"
+                        >/ssrf_target</a
+                    >
+                </ul>
+            </div>
+        </div>
+        {{ bootstrap.load_js() }}
     </body>
 </html>
