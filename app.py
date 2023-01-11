@@ -130,7 +130,7 @@ def ssrf():
     if 'url' not in request.args:
         return render_template('ssrf.html')
     url = request.args['url']
-    if not url.startswith('http'):
+    if '://' not in url:
         url = 'http://' + url
     with urlopen(url) as resp:
         content = resp.read().decode()
@@ -142,3 +142,6 @@ def ssrf_target():
     if request.remote_addr != '127.0.0.1':
         abort(404)
     return 'SCAIST{$$rf_c4n_9o_4nywh3r3!}'
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000, debug=False)
