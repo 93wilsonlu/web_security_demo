@@ -4,85 +4,97 @@
     </head>
     <body>
         <div class="container pt-3">
-            <div class="card">
-                <div class="card-header fs-2">Welcome to SCAIST!</div>
-                <ul class="list-group list-group-flush">
-                    <a
-                        class="list-group-item list-group-item-action disabled"
-                        href="/free_flag"
-                        >/free_flag</a
-                    >
-                    <a
-                        class="list-group-item list-group-item-action"
-                        href="/get_form"
-                        >/get_form</a
-                    >
-                    <a
-                        class="list-group-item list-group-item-action"
-                        href="/post_form"
-                        >/post_form</a
-                    >
-                    <a
-                        class="list-group-item list-group-item-action"
-                        href="/302"
-                        >/302</a
-                    >
-                    <a
-                        class="list-group-item list-group-item-action"
-                        href="/cookie"
-                        >/cookie</a
-                    >
-                    <a
-                        class="list-group-item list-group-item-action"
-                        href="/session"
-                        >/session</a
-                    >
-                    <a
-                        class="list-group-item list-group-item-action"
-                        href="/logic_flaw"
-                        >/logic_flaw</a
-                    >
-                    <a
-                        class="list-group-item list-group-item-action"
-                        href="/logic_flaw_number"
-                        >/logic_flaw_number</a
-                    >
-                    <a
-                        class="list-group-item list-group-item-action"
-                        href="/change_email"
-                        >/change_email</a
-                    >
-                    <a
-                        class="list-group-item list-group-item-action"
-                        href="/broken_role"
-                        >/broken_role</a
-                    >
-                    <a
-                        class="list-group-item list-group-item-action"
-                        href="/path_traversal"
-                        >/path_traversal</a
-                    >
-                    <a
-                        class="list-group-item list-group-item-action"
-                        href="/cmdi"
-                        >/cmdi</a
-                    >
-                    <a
-                        class="list-group-item list-group-item-action"
-                        href="/cmdi_pro_max"
-                        >/cmdi_pro_max</a
-                    >
-                    <a
-                        class="list-group-item list-group-item-action"
-                        href="/ssrf"
-                        >/ssrf</a
-                    >
-                    <a
-                        class="list-group-item list-group-item-action"
-                        href="/ssrf_target"
-                        >/ssrf_target</a
-                    >
-                </ul>
+            <h1>Welcome to SCAIST!</h1>
+            <div class="row">
+                <div class="col-6">
+                    <div class="card">
+                        <div class="card-header fs-2">Demo</div>
+                        <ul class="list-group list-group-flush">
+                            <a
+                                class="list-group-item list-group-item-action"
+                                href="/get_form"
+                                >Get form</a
+                            >
+                            <a
+                                class="list-group-item list-group-item-action"
+                                href="/post_form"
+                                >Post form</a
+                            >
+                            <a
+                                class="list-group-item list-group-item-action"
+                                href="/302"
+                                >302 Relocation</a
+                            >
+                            <a
+                                class="list-group-item list-group-item-action"
+                                href="/cookie"
+                                >Cookie</a
+                            >
+                            <a
+                                class="list-group-item list-group-item-action"
+                                href="/session"
+                                >Session</a
+                            >
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="card">
+                        <div class="card-header fs-2">Lab</div>
+                        <ul class="list-group list-group-flush">
+                            <a
+                                class="list-group-item list-group-item-action disabled"
+                                href="/free_flag"
+                                >Free flag</a
+                            >
+                            <a
+                                class="list-group-item list-group-item-action"
+                                href="/cookie"
+                                >Change cookie</a
+                            >
+                            <a
+                                class="list-group-item list-group-item-action"
+                                href="/logic_flaw"
+                                >Logic flaw</a
+                            >
+                            <a
+                                class="list-group-item list-group-item-action"
+                                href="/logic_flaw_number"
+                                >Logic flaw number</a
+                            >
+                            <a
+                                class="list-group-item list-group-item-action"
+                                href="/broken_role"
+                                >Broken Role</a
+                            >
+                            <a
+                                class="list-group-item list-group-item-action"
+                                href="/change_email"
+                                >Change email</a
+                            >
+                            <a
+                                class="list-group-item list-group-item-action"
+                                href="/cmdi"
+                                >Cmdi</a
+                            >
+                            <a
+                                class="list-group-item list-group-item-action"
+                                href="/cmdi_pro_max"
+                                >Cmdi Pro max</a
+                            >
+                            <a
+                                class="list-group-item list-group-item-action"
+                                href="/path_traversal"
+                                >Path traversal</a
+                            >
+                            <a
+                                class="list-group-item list-group-item-action"
+                                href="/ssrf"
+                                >SSRF</a
+                            >
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
         {{ bootstrap.load_js() }}
