@@ -1,8 +1,8 @@
-FROM python:3.10
+FROM python:3.11
 
 WORKDIR /app
 COPY . /app
-RUN pip3 install flask
+RUN pip3 install flask bootstrap-flask
 
 RUN adduser --system --no-create-home app
 USER app

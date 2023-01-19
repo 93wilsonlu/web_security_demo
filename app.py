@@ -1,8 +1,8 @@
 from flask import Flask, render_template, make_response, redirect, request, session, send_file, url_for, abort
 import os
 from datetime import timedelta
-from urllib.request import urlopen
 from flask_bootstrap import Bootstrap5
+import subprocess
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(32)
@@ -132,11 +132,9 @@ def ssrf():
     if 'url' not in request.args:
         return render_template('ssrf.html')
     url = request.args['url']
-    if '://' not in url:
-        url = 'http://' + url
-    with urlopen(url) as resp:
-        content = resp.read().decode()
-    return content
+    print(url)
+
+    return subprocess.check_output(['curl', '-L', url])
 
 
 @app.route('/ssrf_target', methods=['GET'])
