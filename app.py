@@ -56,6 +56,7 @@ def change_cookie():
 def change_session():
     if 'username_sess' not in session:
         session['username_sess'] = 'guest'
+        session['Flag'] = 'SCAIST{S0m3_s3ss10n_i5_r3ad4ble}'
         session.permanent = True
     if session['username_sess'] == 'admin':
         return 'SCAIST{1_c4n_ch4ng3_s3ss10n!}'
@@ -132,8 +133,6 @@ def ssrf():
     if 'url' not in request.args:
         return render_template('ssrf.html')
     url = request.args['url']
-    print(url)
-
     return subprocess.check_output(['curl', '-L', url])
 
 
