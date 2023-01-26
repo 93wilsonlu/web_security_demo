@@ -20,7 +20,7 @@ def index():
 
 @app.route('/free_flag', methods=['GET'])
 def free_flag():
-    return 'SCAIST{Ed1t4ble_fr0nt3nd}'
+    return render_template('free_flag.html')
 
 
 @app.route('/get_form', methods=['GET'])
@@ -118,11 +118,11 @@ def cmdi_pro_max():
         return render_template('cmdi_pro_max.html')
     ip = request.args['ip']
     if 'flag.txt' in ip:
-        return 'Bad hacker! You can never read flag.txt'
+        return 'Bad hacker! You cannot read flag.txt'
     if 'cat' in ip:
         return 'Don\'t touch my cat!'
-    ip.replace(';', '')
-    ip.replace(' ', '')
+    ip = ip.replace(';', '')
+    ip = ip.replace(' ', '')
     with os.popen('ping -c 1 ' + ip, 'r') as f:
         content = f.read()
     return content
