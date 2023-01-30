@@ -34,6 +34,11 @@ def post_form():
 
 
 @app.route('/302', methods=['GET'])
+def halt_redirect_index():
+    return render_template('302.html')
+
+
+@app.route('/302-flag', methods=['GET'])
 def halt_redirect():
     response = make_response(redirect('/'))
     response.status_code = 302
