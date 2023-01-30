@@ -4,10 +4,10 @@ from flask import render_template, session, request, redirect, url_for
 
 @change_email.route('/', methods=['GET', 'POST'])
 def index():
-    if 'email' in request.form and not request.form['email'].endswith('@admin.scaist.com'):
+    if 'email' in request.form and not request.form['email'].endswith('@admin.scaict.com'):
         session['email'] = request.form['email']
     email = session.get('email', '')
-    isAdmin = email.endswith('@admin.scaist.com')
+    isAdmin = email.endswith('@admin.scaict.com')
     return render_template('change_email/index.html', email=email, isAdmin=isAdmin)
 
 
