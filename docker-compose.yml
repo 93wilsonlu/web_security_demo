@@ -7,14 +7,49 @@ services:
       - external
       - internal
     ports:
-      - 8301:8301
+      - 8301:80
+  path_traversal:
+    build: path_traversal
+    networks:
+      - external
+      - internal
+    ports:
+      - 8302:80
+  advanced_path_traversal:
+    build: advanced_path_traversal
+    networks:
+      - external
+      - internal
+    ports:
+      - 8303:80
+  cmdi:
+    build: cmdi
+    networks:
+      - external
+      - internal
+    ports:
+      - 8304:80
+  cmdi_pro_max:
+    build: cmdi_pro_max
+    networks:
+      - external
+      - internal
+    ports:
+      - 8305:80
+  change_email:
+    build: change_email
+    networks:
+      - external
+      - internal
+    ports:
+      - 8306:80
   php-web:
     build: php-web
     networks:
       - external
       - internal
     ports:
-      - 8302:80
+      - 8307:80
 
 networks:
   internal:

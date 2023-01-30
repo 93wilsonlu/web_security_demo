@@ -1,21 +1,11 @@
-from flask import Flask, render_template, make_response, redirect, request, session, send_file, url_for, abort
+from flask import Flask, render_template, make_response, redirect, request, session, url_for, abort
 import os
 from datetime import timedelta
-from flask_bootstrap import Bootstrap5
 import subprocess
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(32)
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=31)
-bootstrap = Bootstrap5(app)
-
-from change_email import change_email
-app.register_blueprint(change_email, url_prefix='/change_email')
-
-
-@app.route('/', methods=['GET'])
-def index():
-    return render_template('index.html')
 
 
 @app.route('/free_flag', methods=['GET'])
@@ -91,47 +81,6 @@ def broken_role():
     return render_template('broken_role.html', role=request.args['role'])
 
 
-@app.route('/path_traversal', methods=['GET'])
-def path_traversal():
-    if 'filename' in request.args:
-        return send_file('images/' + request.args['filename'])
-    return render_template('path_traversal.html')
-
-
-@app.route('/advanced_path_traversal', methods=['GET'])
-def advanced_path_traversal():
-    if 'filename' in request.args:
-        filename = request.args['filename'].replace('../', '')
-        return send_file('images/' + filename)
-    return render_template('advanced_path_traversal.html')
-
-
-@app.route('/cmdi', methods=['GET'])
-def cmdi():
-    if 'ip' not in request.args:
-        return render_template('cmdi.html')
-    ip = request.args['ip']
-    with os.popen('ping -c 1 ' + ip, 'r') as f:
-        content = f.read()
-    return content
-
-
-@app.route('/cmdi_pro_max', methods=['GET'])
-def cmdi_pro_max():
-    if 'ip' not in request.args:
-        return render_template('cmdi_pro_max.html')
-    ip = request.args['ip']
-    if 'flag.txt' in ip:
-        return 'Bad hacker! You cannot read flag.txt'
-    if 'cat' in ip:
-        return 'Don\'t touch my cat!'
-    ip = ip.replace(';', '')
-    ip = ip.replace(' ', '')
-    with os.popen('ping -c 1 ' + ip, 'r') as f:
-        content = f.read()
-    return content
-
-
 @app.route('/ssrf', methods=['GET'])
 def ssrf():
     if 'url' not in request.args:
@@ -147,4 +96,4 @@ def ssrf_target():
     return 'NCHU{$$rf_c4n_9o_4nywh3r3!}'
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8301, debug=False)
+    app.run(host="0.0.0.0", port=80, debug=False)

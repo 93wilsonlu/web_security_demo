@@ -4,13 +4,8 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-flask = "*"
-bootstrap-flask = "*"
 
 [dev-packages]
-autopep8 = "*"
-flake8 = "*"
 
 [requires]
 python_version = "3.11"
-python_full_version = "3.11.1"
