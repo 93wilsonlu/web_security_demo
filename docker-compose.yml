@@ -7,7 +7,7 @@ services:
       - external
       - internal
     ports:
-      - 8301:5000
+      - 8301:8301
   php-web:
     build: php-web
     networks:
