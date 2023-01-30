@@ -98,6 +98,14 @@ def path_traversal():
     return render_template('path_traversal.html')
 
 
+@app.route('/advanced_path_traversal', methods=['GET'])
+def advanced_path_traversal():
+    if 'filename' in request.args:
+        filename = request.args['filename'].replace('../', '')
+        return send_file('images/' + filename)
+    return render_template('advanced_path_traversal.html')
+
+
 @app.route('/cmdi', methods=['GET'])
 def cmdi():
     if 'ip' not in request.args:
