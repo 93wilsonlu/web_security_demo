@@ -1,17 +1,7 @@
 <?php
 show_source(__FILE__);
 if (isset($_FILES["file"])) {
-  if (!empty($_SERVER["HTTP_CLIENT_IP"])) {
-    $ip = $_SERVER["HTTP_CLIENT_IP"];
-  } elseif (!empty($_SERVER["HTTP_X_FORWARDED_FOR"])) {
-    $ip = $_SERVER["HTTP_X_FORWARDED_FOR"];
-  } elseif (!empty($_SERVER["REMOTE_ADDR"])) {
-    $ip = $_SERVER["REMOTE_ADDR"];
-  } else {
-    $ip = "anonymous";
-  }
-
-  $target_dir = "files/" . md5($ip) . '/';
+  $target_dir = "files/" . md5(time()) . '/';
   if (!is_dir($target_dir)) {
     mkdir($target_dir);
   }
