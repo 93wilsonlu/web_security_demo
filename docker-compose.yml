@@ -50,6 +50,13 @@ services:
       - internal
     ports:
       - 8307:80
+  ssti:
+    build: ssti
+    networks:
+      - external
+      - internal
+    ports:
+      - 8308:8308
 
 networks:
   internal:
