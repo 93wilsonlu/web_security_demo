@@ -57,6 +57,13 @@ services:
       - internal
     ports:
       - 8308:8308
+  xss:
+    build: xss
+    networks:
+      - external
+      - internal
+    ports:
+      - 8309:8309
 
 networks:
   internal:
