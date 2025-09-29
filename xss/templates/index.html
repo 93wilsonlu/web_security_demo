@@ -1,20 +1,572 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!doctype html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    {% if name %}
-    <h1>Hello {{ name|safe }}</h1>
-    {% else %}
-    <form method="get">
-        <label for="name">Name</label>
-        <input type="text" name="name" id="name" />
-        <input type="submit" value="submit" />
-    </form>
-    {% endif %}
-</body>
+    <title>TechMart - 科技產品搜尋平台</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+      :root {
+        --primary: #6366f1;
+        --primary-dark: #4f46e5;
+        --secondary: #f59e0b;
+        --bg-primary: #0f0f23;
+        --bg-secondary: #1a1a3e;
+        --card-bg: #252550;
+        --text-primary: #ffffff;
+        --text-secondary: #a5a5db;
+        --text-muted: #8b8bb8;
+        --border: rgba(99, 102, 241, 0.2);
+        --border-light: rgba(255, 255, 255, 0.1);
+        --success: #10b981;
+        --warning: #f59e0b;
+        --danger: #ef4444;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+        color: var(--text-primary);
+        line-height: 1.6;
+        min-height: 100vh;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      /* Header Styles */
+      .header {
+        text-align: center;
+        margin-bottom: 40px;
+        padding: 40px 0;
+      }
+
+      .logo {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+
+      .logo i {
+        font-size: 2.5rem;
+        color: var(--primary);
+      }
+
+      .header h1 {
+        margin: 0;
+        font-size: 3rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        letter-spacing: -0.02em;
+      }
+
+      .subtitle {
+        color: var(--text-secondary);
+        font-size: 1.2rem;
+        margin: 8px 0 0 0;
+      }
+
+      .warning-note {
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        border-radius: 12px;
+        padding: 16px;
+        margin: 24px 0;
+        color: #fecaca;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .warning-note i {
+        color: var(--danger);
+        font-size: 1.2rem;
+      }
+
+      /* Search Section */
+      .search-section {
+        background: var(--card-bg);
+        border-radius: 20px;
+        padding: 32px;
+        margin-bottom: 40px;
+        border: 1px solid var(--border);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      }
+
+      .search-form {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .search-input-group {
+        flex: 1;
+        position: relative;
+      }
+
+      .search-input {
+        width: 100%;
+        padding: 16px 20px 16px 50px;
+        background: var(--bg-secondary);
+        border: 2px solid var(--border-light);
+        border-radius: 50px;
+        color: var(--text-primary);
+        font-size: 1.1rem;
+        outline: none;
+        transition: all 0.3s ease;
+      }
+
+      .search-input:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+      }
+
+      .search-input::placeholder {
+        color: var(--text-muted);
+      }
+
+      .search-icon {
+        position: absolute;
+        left: 18px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-muted);
+        font-size: 1.1rem;
+      }
+
+      .search-btn {
+        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        border: none;
+        color: white;
+        padding: 16px 32px;
+        border-radius: 50px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .search-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+      }
+
+      /* Search Results */
+      .search-results {
+        background: var(--card-bg);
+        border-radius: 12px;
+        padding: 24px;
+        margin-bottom: 40px;
+        border: 1px solid var(--border);
+      }
+
+      .results-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+
+      .results-header i {
+        color: var(--secondary);
+      }
+
+      .search-query {
+        background: rgba(99, 102, 241, 0.1);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 12px 16px;
+        margin-top: 12px;
+        font-family: 'Courier New', monospace;
+      }
+
+      /* Products Grid */
+      .products-section h2 {
+        font-size: 2rem;
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .products-section h2 i {
+        color: var(--primary);
+      }
+
+      .products-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 24px;
+        margin-top: 24px;
+      }
+
+      .product-card {
+        background: var(--card-bg);
+        border-radius: 16px;
+        padding: 24px;
+        border: 1px solid var(--border-light);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .product-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
+        border-radius: 16px 16px 0 0;
+      }
+
+      .product-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+        border-color: var(--primary);
+      }
+
+      .product-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        margin-bottom: 12px;
+      }
+
+      .product-icon {
+        width: 48px;
+        height: 48px;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+      }
+
+      .product-name {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0;
+        flex: 1;
+        padding-left: 16px;
+      }
+
+      .product-desc {
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+        margin-top: 8px;
+        line-height: 1.5;
+      }
+
+      .product-id {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        background: rgba(99, 102, 241, 0.2);
+        color: var(--primary);
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-size: 0.8rem;
+        font-weight: 500;
+      }
+
+      .product-footer {
+        margin-top: 20px;
+        padding-top: 16px;
+        border-top: 1px solid var(--border-light);
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 16px;
+      }
+
+      .product-rating {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .stars {
+        display: flex;
+        gap: 2px;
+      }
+
+      .stars i {
+        color: var(--secondary);
+        font-size: 0.9rem;
+      }
+
+      .stars .far {
+        color: var(--text-muted);
+      }
+
+      .rating-text {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+      }
+
+      .product-price {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+      }
+
+      .price {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--success);
+      }
+
+      /* Animations */
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .product-card {
+        animation: fadeInUp 0.6s ease forwards;
+      }
+
+      .product-card:nth-child(2) { animation-delay: 0.1s; }
+      .product-card:nth-child(3) { animation-delay: 0.2s; }
+      .product-card:nth-child(4) { animation-delay: 0.3s; }
+      .product-card:nth-child(5) { animation-delay: 0.4s; }
+      .product-card:nth-child(6) { animation-delay: 0.5s; }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .container {
+          padding: 16px;
+        }
+
+        .header h1 {
+          font-size: 2.2rem;
+        }
+
+        .search-form {
+          flex-direction: column;
+          gap: 16px;
+        }
+
+        .search-input-group,
+        .search-btn {
+          width: 100%;
+        }
+
+        .products-grid {
+          grid-template-columns: 1fr;
+          gap: 16px;
+        }
+
+        .search-section {
+          padding: 24px;
+        }
+
+        .product-footer {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 12px;
+        }
+
+        .product-price {
+          align-items: flex-start;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .header h1 {
+          font-size: 1.8rem;
+        }
+
+        .subtitle {
+          font-size: 1rem;
+        }
+
+        .search-section {
+          padding: 20px;
+        }
+
+        .product-card {
+          padding: 20px;
+        }
+      }
+
+      /* Empty State */
+      .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: var(--text-muted);
+      }
+
+      .empty-state i {
+        font-size: 4rem;
+        margin-bottom: 16px;
+        color: var(--border);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Header -->
+      <header class="header">
+        <div class="logo">
+          <i class="fas fa-shopping-cart"></i>
+          <h1>TechMart</h1>
+        </div>
+        <p class="subtitle">探索最新科技產品 - 您的數位生活夥伴</p>
+        
+        <div class="warning-note">
+          <i class="fas fa-exclamation-triangle"></i>
+          <div>
+            <strong>安全警告：</strong> 此為教學演示環境，包含故意設計的 XSS 漏洞。請僅在隔離環境中使用，切勿部署至公開網路。
+          </div>
+        </div>
+      </header>
+
+      <!-- Search Section -->
+      <section class="search-section">
+        <form class="search-form" action="{{ url_for('search') }}" method="get">
+          <div class="search-input-group">
+            <i class="fas fa-search search-icon"></i>
+            <input 
+              type="text" 
+              name="q" 
+              class="search-input"
+              placeholder="搜尋您想要的科技產品..." 
+              value="{{ q_escaped }}"
+              autocomplete="off"
+            >
+          </div>
+          <button type="submit" class="search-btn">
+            <i class="fas fa-search"></i>
+            搜尋
+          </button>
+        </form>
+      </section>
+
+      <!-- Search Results -->
+      {% if q is not none %}
+      <section class="search-results">
+        <div class="results-header">
+          <i class="fas fa-list"></i>
+          <h3>搜尋結果</h3>
+        </div>
+        <p>找到 <strong>{{ products|length }}</strong> 個符合條件的產品</p>
+        
+        <!-- XSS Vulnerable Area - 故意設計的漏洞展示區域 -->
+        <div class="search-query">
+          <strong>搜尋關鍵字：</strong> {{ q|safe }}
+        </div>
+      </section>
+      {% endif %}
+
+      <!-- Products Section -->
+      <section class="products-section">
+        <h2>
+          <i class="fas fa-box-open"></i>
+          {% if q %}搜尋結果{% else %}熱門產品{% endif %}
+        </h2>
+        
+        {% if products %}
+        <div class="products-grid">
+          {% for p in products %}
+          <div class="product-card">
+            <div class="product-id">#{{ p.id }}</div>
+            <div class="product-header">
+              <div class="product-icon">
+                {% if 'keyboard' in p.name.lower() or 'mouse' in p.name.lower() %}
+                  <i class="fas fa-keyboard"></i>
+                {% elif 'monitor' in p.name.lower() or 'webcam' in p.name.lower() %}
+                  <i class="fas fa-desktop"></i>
+                {% elif 'headphone' in p.name.lower() or 'speaker' in p.name.lower() or 'microphone' in p.name.lower() %}
+                  <i class="fas fa-headphones"></i>
+                {% elif 'ssd' in p.name.lower() or 'storage' in p.name.lower() %}
+                  <i class="fas fa-hdd"></i>
+                {% elif 'hub' in p.name.lower() or 'router' in p.name.lower() %}
+                  <i class="fas fa-network-wired"></i>
+                {% elif 'camera' in p.name.lower() or 'gimbal' in p.name.lower() %}
+                  <i class="fas fa-camera"></i>
+                {% elif 'phone' in p.name.lower() or 'mobile' in p.name.lower() %}
+                  <i class="fas fa-mobile-alt"></i>
+                {% elif 'laptop' in p.name.lower() or 'stand' in p.name.lower() %}
+                  <i class="fas fa-laptop"></i>
+                {% elif 'power' in p.name.lower() or 'bank' in p.name.lower() %}
+                  <i class="fas fa-battery-three-quarters"></i>
+                {% elif 'lamp' in p.name.lower() or 'light' in p.name.lower() %}
+                  <i class="fas fa-lightbulb"></i>
+                {% else %}
+                  <i class="fas fa-microchip"></i>
+                {% endif %}
+              </div>
+              <h3 class="product-name">{{ p.name }}</h3>
+            </div>
+            <p class="product-desc">{{ p.desc }}</p>
+            
+            <div class="product-footer">
+              <div class="product-rating">
+                <div class="stars">
+                  {% set rating = p.rating %}
+                  {% for i in range(5) %}
+                    {% if i < rating %}
+                      <i class="fas fa-star"></i>
+                    {% elif i < rating + 0.5 %}
+                      <i class="fas fa-star-half-alt"></i>
+                    {% else %}
+                      <i class="far fa-star"></i>
+                    {% endif %}
+                  {% endfor %}
+                </div>
+                <span class="rating-text">{{ p.rating }} ({{ p.reviews }} 評價)</span>
+              </div>
+              <div class="product-price">
+                <span class="price">NT$ {{ "{:,}".format(p.price) }}</span>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+          <i class="fas fa-search"></i>
+          <h3>找不到符合條件的產品</h3>
+          <p>請嘗試使用其他關鍵字搜尋</p>
+        </div>
+        {% endif %}
+      </section>
+    </div>
+  </body>
 </html>
