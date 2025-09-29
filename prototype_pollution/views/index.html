@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prototype Pollution Demo - 原型污染演示</title>
+    <style>
+        :root {
+            --primary: #e11d48;
+            --primary-dark: #be123c;
+            --secondary: #f59e0b;
+            --bg-primary: #1a1a2e;
+            --bg-secondary: #16213e;
+            --card-bg: #0f3460;
+            --text-primary: #ffffff;
+            --text-secondary: #e2e8f0;
+            --text-muted: #94a3b8;
+            --border: rgba(225, 29, 72, 0.3);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px 0;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin: 0;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            margin: 16px 0;
+        }
+
+        .warning {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--danger);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 24px 0;
+            color: #fecaca;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .warning-icon {
+            font-size: 1.5rem;
+            color: var(--danger);
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .demo-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--border);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .demo-card h3 {
+            color: var(--primary);
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--bg-secondary);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.1);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 120px;
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 12px;
+            margin-bottom: 12px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(225, 29, 72, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--text-muted), #64748b);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger), #dc2626);
+        }
+
+        .response-area {
+            background: #0a0a0a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 16px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 13px;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .status-section {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--border);
+            margin-bottom: 24px;
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .status-item {
+            background: var(--bg-secondary);
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .status-item.polluted {
+            border-left-color: var(--danger);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .attack-examples {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--border);
+            margin-bottom: 24px;
+        }
+
+        .attack-example {
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            border-left: 4px solid var(--warning);
+        }
+
+        .attack-example h4 {
+            margin-top: 0;
+            color: var(--warning);
+        }
+
+        .code-block {
+            background: #0a0a0a;
+            border: 1px solid #333;
+            border-radius: 6px;
+            padding: 12px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 12px;
+            overflow-x: auto;
+            margin: 8px 0;
+        }
+
+        @media (max-width: 768px) {
+            .demo-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔓 Prototype Pollution Demo</h1>
+            <p class="subtitle">JavaScript 原型污染漏洞演示平台</p>
+            
+            <div class="warning">
+                <span class="warning-icon">⚠️</span>
+                <div>
+                    <strong>安全警告：</strong> 此為教學演示環境，包含故意設計的原型污染漏洞。請僅在隔離環境中使用，切勿部署至公開網路。
+                </div>
+            </div>
+        </div>
+
+        <!-- 狀態檢查區域 -->
+        <div class="status-section">
+            <h3>🔍 原型污染狀態檢查</h3>
+            <button class="btn" onclick="checkPollution()">檢查當前狀態</button>
+            <button class="btn btn-danger" onclick="resetPollution()">重置原型</button>
+            <div id="status-display" class="status-grid"></div>
+        </div>
+
+        <!-- 演示區域 -->
+        <div class="demo-grid">
+            <!-- 方法執行演示 -->
+            <div class="demo-card">
+                <h3>🎯 方法執行攻擊</h3>
+                <p>透過 <code>variable[method]</code> 的方式執行動態方法，攻擊者可以輸入 <code>constructor</code> 來污染原型。</p>
+                
+                <div class="form-group">
+                    <label>方法名稱:</label>
+                    <input type="text" id="methodName" class="form-control" placeholder="例如: constructor" value="list">
+                </div>
+                
+                <div class="form-group">
+                    <label>參數 (JSON 陣列):</label>
+                    <textarea id="methodParams" class="form-control" placeholder='例如: [{"prototype": {"isAdmin": true}}]'>[]</textarea>
+                </div>
+                
+                <button class="btn" onclick="executeMethod()">執行方法</button>
+                <button class="btn btn-secondary" onclick="loadMethodExample()">載入攻擊範例</button>
+                
+                <div id="method-response" class="response-area"></div>
+            </div>
+
+            <!-- 設定合併演示 -->
+            <div class="demo-card">
+                <h3>⚙️ 設定合併攻擊</h3>
+                <p>透過合併使用者設定時的不安全操作，攻擊者可以使用 <code>__proto__</code> 來污染原型。</p>
+                
+                <div class="form-group">
+                    <label>設定 JSON:</label>
+                    <textarea id="configData" class="form-control" placeholder='{"theme": "dark", "language": "zh"}'>{
+  "theme": "dark",
+  "language": "zh"
+}</textarea>
+                </div>
+                
+                <button class="btn" onclick="updateConfig()">更新設定</button>
+                <button class="btn btn-secondary" onclick="loadConfigExample()">載入攻擊範例</button>
+                
+                <div id="config-response" class="response-area"></div>
+            </div>
+        </div>
+
+        <!-- 攻擊範例說明 -->
+        <div class="attack-examples">
+            <h3>💀 攻擊範例說明</h3>
+            
+            <div class="attack-example">
+                <h4>1. Constructor 原型污染</h4>
+                <p>通過 constructor.prototype 污染所有物件：</p>
+                <div class="code-block">方法名稱: constructor
+參數: [{"prototype": {"isAdmin": true}}]</div>
+            </div>
+            
+            <div class="attack-example">
+                <h4>2. __proto__ 原型污染</h4>
+                <p>通過 __proto__ 直接修改原型鏈：</p>
+                <div class="code-block">{
+  "__proto__": {
+    "isAdmin": true,
+    "role": "admin"
+  }
+}</div>
+            </div>
+            
+            <div class="attack-example">
+                <h4>3. 深層巢狀污染</h4>
+                <p>通過深層巢狀結構進行污染：</p>
+                <div class="code-block">{
+  "user": {
+    "__proto__": {
+      "polluted": "yes"
+    }
+  }
+}</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 檢查原型污染狀態
+        async function checkPollution() {
+            try {
+                const response = await fetch('/api/check-pollution');
+                const data = await response.json();
+                
+                const statusDisplay = document.getElementById('status-display');
+                statusDisplay.innerHTML = '';
+                
+                Object.entries(data.checks).forEach(([key, value]) => {
+                    const item = document.createElement('div');
+                    item.className = `status-item ${value !== undefined ? 'polluted' : ''}`;
+                    item.innerHTML = `
+                        <strong>${key}:</strong><br>
+                        <code>${value !== undefined ? JSON.stringify(value) : 'undefined'}</code>
+                    `;
+                    statusDisplay.appendChild(item);
+                });
+                
+                if (data.isPolluted) {
+                    statusDisplay.insertAdjacentHTML('afterbegin', 
+                        '<div style="color: #ef4444; font-weight: bold; margin-bottom: 16px;">🚨 檢測到原型污染！</div>'
+                    );
+                }
+                
+            } catch (error) {
+                console.error('檢查失敗:', error);
+                alert('檢查失敗: ' + error.message);
+            }
+        }
+
+        // 重置原型污染
+        async function resetPollution() {
+            try {
+                const response = await fetch('/api/reset', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                const data = await response.json();
+                alert(data.message);
+                checkPollution(); // 重新檢查狀態
+            } catch (error) {
+                console.error('重置失敗:', error);
+                alert('重置失敗: ' + error.message);
+            }
+        }
+
+        // 執行方法
+        async function executeMethod() {
+            const methodName = document.getElementById('methodName').value;
+            const paramsText = document.getElementById('methodParams').value;
+            const responseDiv = document.getElementById('method-response');
+            
+            try {
+                let params = [];
+                if (paramsText.trim()) {
+                    params = JSON.parse(paramsText);
+                }
+                
+                const response = await fetch('/api/execute', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        method: methodName,
+                        params: params
+                    })
+                });
+                
+                const data = await response.json();
+                responseDiv.textContent = JSON.stringify(data, null, 2);
+                
+                // 自動檢查污染狀態
+                setTimeout(checkPollution, 500);
+                
+            } catch (error) {
+                responseDiv.textContent = 'Error: ' + error.message;
+            }
+        }
+
+        // 載入方法攻擊範例
+        function loadMethodExample() {
+            document.getElementById('methodName').value = 'constructor';
+            document.getElementById('methodParams').value = JSON.stringify([{"prototype": {"isAdmin": true, "role": "admin"}}], null, 2);
+        }
+
+        // 更新設定
+        async function updateConfig() {
+            const configText = document.getElementById('configData').value;
+            const responseDiv = document.getElementById('config-response');
+            
+            try {
+                const config = JSON.parse(configText);
+                
+                const response = await fetch('/api/config', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ config: config })
+                });
+                
+                const data = await response.json();
+                responseDiv.textContent = JSON.stringify(data, null, 2);
+                
+                // 自動檢查污染狀態
+                setTimeout(checkPollution, 500);
+                
+            } catch (error) {
+                responseDiv.textContent = 'Error: ' + error.message;
+            }
+        }
+
+        // 載入設定攻擊範例
+        function loadConfigExample() {
+            document.getElementById('configData').value = JSON.stringify({
+                "__proto__": {
+                    "isAdmin": true,
+                    "role": "admin",
+                    "polluted": "via __proto__"
+                }
+            }, null, 2);
+        }
+
+        // 頁面載入時自動檢查狀態
+        window.addEventListener('load', function() {
+            checkPollution();
+        });
+    </script>
+</body>
+</html>
