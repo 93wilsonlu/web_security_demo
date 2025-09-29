@@ -32,7 +32,7 @@ def halt_redirect_index():
 def halt_redirect():
     response = make_response(redirect(url_for('halt_redirect_index')))
     response.status_code = 302
-    response.headers['Flag'] = 'NCHU{Red1r3Ct_is_cO0l!}'
+    response.headers['Flag'] = 'NTHUTS{Red1r3Ct_is_cO0l!}'
     return response
 
 
@@ -43,7 +43,7 @@ def change_cookie():
         response.set_cookie('username', 'guest')
         return response
     elif request.cookies['username'] == 'admin':
-        return 'NCHU{1_c4n_ch4ng3_c00ki3s!}'
+        return 'NTHUTS{1_c4n_ch4ng3_c00ki3s!}'
     return render_template('cookie.html')
 
 
@@ -51,10 +51,10 @@ def change_cookie():
 def change_session():
     if 'username_sess' not in session:
         session['username_sess'] = 'guest'
-        session['Flag'] = 'NCHU{S0m3_s3ss10n_i5_r3ad4ble}'
+        session['Flag'] = 'NTHUTS{S0m3_s3ss10n_i5_r3ad4ble}'
         session.permanent = True
     if session['username_sess'] == 'admin':
-        return 'NCHU{1_c4n_ch4ng3_s3ss10n!}'
+        return 'NTHUTS{1_c4n_ch4ng3_s3ss10n!}'
     return render_template('cookie.html')
 
 
@@ -93,7 +93,7 @@ def ssrf():
 def ssrf_target():
     if request.remote_addr != '127.0.0.1':
         abort(404)
-    return 'NCHU{$$rf_c4n_9o_4nywh3r3!}'
+    return 'NTHUTS{$$rf_c4n_9o_4nywh3r3!}'
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8301, debug=False)
+    app.run(host="0.0.0.0", port=10001, debug=False)

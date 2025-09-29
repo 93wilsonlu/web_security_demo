@@ -7,63 +7,77 @@ services:
       - external
       - internal
     ports:
-      - 8301:8301
+      - 10001:10001
   path_traversal:
     build: path_traversal
     networks:
       - external
       - internal
     ports:
-      - 8302:8302
+      - 10002:10002
   advanced_path_traversal:
     build: advanced_path_traversal
     networks:
       - external
       - internal
     ports:
-      - 8303:8303
+      - 10003:10003
   cmdi:
     build: cmdi
     networks:
       - external
       - internal
     ports:
-      - 8304:8304
+      - 10004:10004
   cmdi_pro_max:
     build: cmdi_pro_max
     networks:
       - external
       - internal
     ports:
-      - 8305:8305
+      - 10005:10005
   change_email:
     build: change_email
     networks:
       - external
       - internal
     ports:
-      - 8306:8306
+      - 10006:10006
   php-web:
     build: php-web
     networks:
       - external
       - internal
     ports:
-      - 8307:80
+      - 10007:80
   ssti:
     build: ssti
     networks:
       - external
       - internal
     ports:
-      - 8308:8308
+      - 10008:10008
   xss:
     build: xss
     networks:
       - external
       - internal
     ports:
-      - 8309:8309
+      - 10009:10009
+  prototype_pollution:
+    build: prototype_pollution
+    networks:
+      - external
+      - internal
+    ports:
+      - 10010:10010
+  lfi:
+    build: lfi
+    networks:
+      - external
+      - internal
+    ports:
+      - 10011:80
 
 networks:
   internal:

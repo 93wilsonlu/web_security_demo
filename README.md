@@ -1,6 +1,6 @@
 # Web Security Demo
 
-## Flask: 8301 port
+## Flask: 10001 port
 - Free flag
 - 302 Relocation
 - Change cookie
@@ -13,5 +13,5 @@
 - Path traversal
 - File Upload
 - SSRF
-## PHP: 8302 port
+## PHP: 10002 port
 - File upload
